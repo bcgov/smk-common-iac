@@ -20,4 +20,4 @@ RUN apk update \
 
 USER app
 EXPOSE 8080
-CMD ["caddy", "-quic", "--conf", "/etc/Caddyfile"]
+CMD ["caddy", "-quic", "--conf", "/conf/Caddyfile"]
