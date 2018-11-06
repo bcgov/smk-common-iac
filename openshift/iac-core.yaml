@@ -1,0 +1,49 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: iac-core
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: docker-registry.default.svc:5000/dbc-mapsdk-tools/iac-core
+    generation: null
+    importPolicy: {}
+    name: latest
+    referencePolicy:
+      type: ""
+status:
+  dockerImageRepository: ""
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: smk-iac-core
+  name: iac-core
+spec:
+  failedBuildsHistoryLimit: 5
+  output:
+    to:
+      kind: ImageStreamTag
+      name: iac-core:latest
+  source:
+    dockerfile: |-
+      FROM abiosoft/caddy:builder
+      USER root
+      ARG TELEMETRY=${ENABLE_TELEMETRY:-"false"}
+      ARG PLUGINS='cors,realip,git'
+      RUN apk add --no-cache --virtual .dev bash \
+       && wget -O - https://raw.githubusercontent.com/abiosoft/caddy-docker/master/builder/builder.sh | bash \
+       && apk del --purge .dev
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: abiosoft/caddy:builder
+    type: Docker
+  successfulBuildsHistoryLimit: 5
