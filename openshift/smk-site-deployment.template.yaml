@@ -21,7 +21,7 @@ objects:
     caddy.webhook: ${WEBHOOK_SECRETS}
   kind: Secret
   metadata:
-    name: webhook-key
+    name: ${SITE_NAME}-webhook-key
   type: Opaque
 - apiVersion: v1
   kind: Service
@@ -72,7 +72,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: caddy.webhook
-                name: webhook-key
+                name: ${SITE_NAME}-webhook-key
           image: docker-registry.default.svc:5000/dbc-mapsdk-tools/smk-base:latest
           imagePullPolicy: Always
           name: www
