@@ -36,8 +36,9 @@ spec:
       USER root
       ARG TELEMETRY=${ENABLE_TELEMETRY:-"false"}
       ARG PLUGINS='cors,realip,git'
+      ARG VERSION='0.11.0'
       RUN apk add --no-cache --virtual .dev bash \
-       && wget -O - https://raw.githubusercontent.com/abiosoft/caddy-docker/master/builder/builder.sh | bash \
+       && wget -O - https://raw.githubusercontent.com/abiosoft/caddy-docker/${VERSION}/builder/builder.sh | bash \
        && apk del --purge .dev
     type: Dockerfile
   strategy:
