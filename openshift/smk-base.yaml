@@ -1,0 +1,55 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: smk-base
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: docker-registry.default.svc:5000/dbc-mapsdk-tools/smk-base:latest
+    generation: null
+    importPolicy: {}
+    name: latest
+    referencePolicy:
+      type: ""
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: smk-site-base
+  name: smk-base
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: smk-base:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    dockerfile: |-
+      FROM alpine:3.8
+      USER root
+      ENV ENABLE_TELEMETRY="false"
+      WORKDIR /app
+      RUN apk add --no-cache git openssh-client \
+       && adduser -S smk \
+       && chown -R smk:0 /app && chmod -R 770 /app \
+      USER smk
+      EXPOSE 8080
+      CMD ["/go/caddy", "-quic", "--conf", "/conf/Caddyfile"]
+    type: Dockerfile
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: alpine:3.8
+    type: Docker
+  successfulBuildsHistoryLimit: 5
