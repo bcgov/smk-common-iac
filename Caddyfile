@@ -1,10 +1,10 @@
 0.0.0.0:8080 {
-   git {$siteRepo} /app/smk {
+   git {$siteRepo} {$pvMounthPath} {
        branch {$branch}
        hook {$hookPath} {$hookKey}
        }
-   root /app/smk/sites
+   root {$pvMounthPath}/sites
    gzip
    log stdout
-   errors stdout
+   errors stderr
    }
