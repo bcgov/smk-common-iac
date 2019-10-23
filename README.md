@@ -28,7 +28,7 @@ Common Infrastructure as Code for SMK sites.
  ## install after cleanup
  $ oc process -f smk-site-deployment-template.yaml \
    SITE_NAME=${SMK_SITENAME} \
-   SITE_REPO="${SMK_SITE_GIT_REPO" \
+   SITE_REPO="${SMK_SITE_GIT_REPO}" \
    REPO_BRANCH=${GIT_REPO_BRANCH} WEBHOOK_PATH="${/contextPath}" | oc create -f -
  ## for HTTP only site run following  
  $ oc expose svc/smk-${SITE_NAME} --hostname=${YOUR_SITE_FQDN}
